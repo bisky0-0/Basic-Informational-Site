@@ -1,15 +1,17 @@
-const http = require('http');
-const fs = require('fs');
-const url = require('url')
+const express = require('express');
+const path = require('path');
 
-http.createServer((req, res) => {
-    let fileName = "./" + req.url
-    fs.readFile(fileName, (err, data) => {
-        if (err) res.write('not found');
+const app = express();
+const PORT = 8080;
 
-        else {
-            res.write(data)
-            res.end()
-        }
-    })
-}).listen(8080)
+// Serve static files from the current directory
+app.use(express.static(__dirname));
+
+// Catch-all route to handle requests to non-existent files
+app.use((req, res) => {
+    res.status(404).send('Error: File Not Found');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
